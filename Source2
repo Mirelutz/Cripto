@@ -1,0 +1,123 @@
+//Specific: dupa introducerea numarului pt schimbat baza pune punct sau orice caracter care nu e alfanumeric
+#include <iostream>
+using namespace std;
+int main()
+{
+    int b1, b2;
+    bool invalid = true;
+    char nr[100],nr2[100];
+    int k,p=1,q=0,d=0;
+    long long numar=0;
+    while (invalid)
+    {
+        cout << "Introdu baza din care vrei sa faci convertirea, respectiv baza in care vrei sa convertesti (baze de la 2 la 26):";
+        cin >> b1 >> b2;
+        if ((b1 > 1 && b1 < 27) && (b2 > 1 && b1 < 27)) invalid = false;
+        else cout << "Bazele alese nu sunt de la 2 la 26! Introdu altele!";
+    }
+    while (!invalid)
+    {
+        bool val = true;
+        cout << "Introdu numarul in baza " << b1 << " pe care vrei sa il convertesti in baza " << b2 << ":";
+        k = 0;
+        while(true)
+        {
+            cin >> nr[k];
+            if ((!(nr[k] > 47 && nr[k] < 58)) && (!(nr[k] > 64 && nr[k] < 91)) && (!(nr[k] > 96 && nr[k] < 123)))  break;
+            k++;
+        }
+        if (b1 < 26) {
+            if(b1<11)
+                for (int i = 0;i < k;i++)
+                {
+                    if (nr[i] < 48 || nr[i]>47 + b1) {
+                        val = false;
+                        cout << "Acest numar nu este scris in baza " << b1 << ". Incearca alt numar:" << endl;break;
+                    }
+                }
+            else
+            {
+                for (int i = 0;i < k;i++)
+                {
+                    if ((!(nr[i] > 47 && nr[i]<58))&&(!(nr[i]>64 && nr[i]<55+b1))&& (!(nr[i] > 96 && nr[i] < 87 + b1))) {
+                        val = false;
+                        cout << "Acest numar nu este scris in baza " << b1 << ". Incearca alt numar:";break;
+                    }
+                }
+            }
+        }
+        else if (b1 == 26)
+        {
+            for (int i = 0;i < k;i++)
+            {
+                if ((!(nr[i] > 64 && nr[i] < 91)) && (!(nr[i] > 96 && nr[i] < 123))) {
+                    val = false;
+                    cout << "Acest numar nu este scris in baza " << b1 << ". Incearca alt numar:";break;
+                }
+            }
+        }
+        if (val) invalid = true;
+    }
+    if (b1 == 26) {
+        for (int i = k - 1;i > -1;i--)
+        {
+            if(nr[i] > 64 && nr[i] < 91)
+                numar += (int(nr[i]) -65) * p;
+            else numar += (int(nr[i]) - 97) * p;
+            p *= 26;
+        }
+    }
+    else if (b1 < 11) {
+        for (int i = k - 1;i > -1;i--)
+        {
+            numar += (int(nr[i])-48) * p; 
+            p *= b1;
+        }
+    }
+    else {
+        for (int i = k - 1;i > -1;i--)
+        {
+            if (nr[i] > 47 && nr[i] < 58)
+                numar += (int(nr[i]) - 48) * p;
+            else if (nr[i] > 64 && nr[i] < 55+b1)
+                numar += (int(nr[i]) - 65) * p;
+            else numar += (int(nr[i]) - 97) * p;
+            p *= b1;
+        }
+    }
+    p = 1;
+    if (b2 == 10) cout << numar;
+    else if(b2<10){
+        while (numar > 0)
+        {
+            d += (numar % b2)*p;
+            p *= 10;
+            numar = numar / b2;
+        }
+        cout << d/10;
+    }
+    else if (b2 > 10 && b2 < 26) {
+        while (numar > 0)
+        {
+            d = numar % b2;
+            numar = numar / b2;
+            if (d < 10) nr2[q] = char(d + 48);
+            else nr2[q] = char(d+87);
+            q++;
+        }
+    }
+    else {
+        while (numar > 0)
+        {
+            d = numar % b2;
+            numar = numar / b2;
+            nr2[q] = char(d + 97);
+            q++;
+        }
+    }
+    if(b2<10) cout << numar;
+    if (b2 > 10)
+        for (int i = q-1;i > -1;i--)
+            cout << nr2[i];
+    return 0;
+}
